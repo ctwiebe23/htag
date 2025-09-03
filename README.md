@@ -21,6 +21,14 @@ argument as the attribute value.
 
 Prints the created tag to the STDOUT.
 
+# OPTIONS
+
+-h
+:   Prints a help message.
+
+\--
+:   Parse flags like text after this is read.
+
 # RETURN CODES
 
 0

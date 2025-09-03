@@ -1,6 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define RETCODE_OK 0
+#define RETCODE_NO_TAG_NAME 1
+#define RETCODE_NO_ATTR_VALUE 2
+
+#define HELP_MESSAGE \
+    "htag\n" \
+    "  Create html in the shell\n" \
+    "\n" \
+    "usage\n" \
+    "  htag tag-name [--attr-name attr-val]... [text-content]...\n" \
+    "\n" \
+    "options\n" \
+    "  -h       Print this message\n" \
+    "  --       Parse flags like text after this is read\n" \
+    "\n" \
+    "return codes\n" \
+    "  0        Returned on success\n" \
+    "  1        Returned when no tag name is provided\n" \
+    "  2        Returned when an attribute is not given a value\n" \
+    "\n" \
+    "README can be found at https://github.com/ctwiebe23/htag\n"
+
 int strLen(char* str) {
     int n = 0;
     for (int i = 0; str[i] != 0; i++) {
@@ -12,7 +34,7 @@ int strLen(char* str) {
 void readStdin() {
     int buf, prev = EOF;
 
-    // `prev` stores previous character, is used as a buffer so that the
+    // prev stores previous character, is used as a buffer so that the
     // last character isn't printed
     while (EOF != (buf = fgetc(stdin))) {
         if (prev != EOF) {
@@ -29,6 +51,7 @@ void readStdin() {
 
 char* readClas(char** clas, int n) {
     char hasNotPrinted = 1;
+    char canReadAttributes = 1;
 
     int textPtr = 0;
     int textLen = 255;
@@ -39,14 +62,20 @@ char* readClas(char** clas, int n) {
 
     for (int i = 0; i < n; i++) {
         // is CLA long flag?
-        if (clas[i][0] == '-' && clas[i][1] == '-' && clas[i][2] != 0) {
-            if (i == n - 1) {
-                fprintf(stderr, "error: attribute lacks value\n");
-                exit(2);
+        if (canReadAttributes && clas[i][0] == '-' && clas[i][1] == '-') {
+            if (clas[i][2] == 0) {
+                canReadAttributes = 0;
+            } else {
+                if (i == n - 1) {
+                    fprintf(stderr, "error: attribute lacks value\n");
+                    exit(RETCODE_NO_ATTR_VALUE);
+                }
+
+                printf(" %s=\"%s\"", clas[i] + 2, clas[i + 1]);
+
+                i++;  // next CLA (value) is already consumed here
             }
 
-            printf(" %s=\"%s\"", clas[i] + 2, clas[i + 1]);
-            i++;
             continue;
         }
 
@@ -75,14 +104,20 @@ char* readClas(char** clas, int n) {
 int main(int argc, char** argv) {
     if (argc < 2) {
         fprintf(stderr, "error: no tag name given\n");
-        return 1;
+        return RETCODE_NO_TAG_NAME;
     }
 
     char* tagName = argv[1];
 
+    if (tagName[0] == '-' && tagName[1] == 'h' && tagName[2] == 0) {
+        printf(HELP_MESSAGE);
+        return RETCODE_OK;
+    }
+
     printf("<%s", tagName);
 
     char* text = readClas(argv + 2, argc - 2);
+    // attributes are printed by readClas
     printf(">");
 
     if (text == NULL) {
@@ -93,5 +128,5 @@ int main(int argc, char** argv) {
 
     printf("</%s>\n", tagName);
 
-    return 0;
+    return RETCODE_OK;
 }
