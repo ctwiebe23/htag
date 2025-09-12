@@ -46,27 +46,27 @@ Printing an empty tag:
 
 ```
 $  htag p ""
->  <p></p>
+>  !((htag p ""))!
 ```
 
 Printing some text:
 
 ```
 $  htag p Some text
->  <p>Some text</p>
+>  !((htag p Some text))!
 
 $  htag p "Some text"
->  <p>Some text</p>
+>  !((htag p "Some text"))!
 
 $  echo "Some text" | htag p
->  <p>Some text</p>
+>  !((echo "Some text" | htag p))!
 ```
 
 Adding attributes:
 
 ```
 $  htag a "An anchor tag" --href "https://foobar.baz"
->  <a href="https://foobar.baz">An anchor tag</a>
+>  !((htag a "An anchor tag" --href "https://foobar.baz"))!
 ```
 
 A more complicated example:
@@ -75,13 +75,11 @@ A more complicated example:
 $  for FILE in $(ls)
    do htag li "$FILE"
    done | htag ul
->  <ul><li>bin</li>
-<li>doc</li>
-<li>justfile</li>
-<li>LICENSE</li>
-<li>pandoc.yml</li>
-<li>README.md</li>
-<li>src</li></ul>
+>  !((
+for FILE in $(ls)
+do htag li "$FILE"
+done | htag ul
+))!
 ```
 
 # SEE ALSO

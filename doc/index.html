@@ -305,9 +305,13 @@ consume one argument as the attribute value.</p>
 <p>Prints the created tag to the STDOUT.</p>
 <h1 id="options">OPTIONS</h1>
 <dl>
-<dt>-h</dt>
+<dt>-h, --help</dt>
 <dd>
 Prints a help message.
+</dd>
+<dt>-V, --version</dt>
+<dd>
+Prints the program’s version.
 </dd>
 <dt>--</dt>
 <dd>
@@ -322,33 +326,36 @@ Returned on success.
 </dd>
 <dt>1</dt>
 <dd>
-Returned when no tag name is provided.
-</dd>
-<dt>2</dt>
-<dd>
 Returned when an attribute is not given a value.
 </dd>
 </dl>
 <h1 id="examples">EXAMPLES</h1>
-<pre><code>$ htag p &quot;&quot;
-&lt;p&gt;&lt;/p&gt;
+<p>Printing an empty tag:</p>
+<pre><code>$  htag p &quot;&quot;
+&gt;  &lt;p&gt;&lt;/p&gt;</code></pre>
+<p>Printing some text:</p>
+<pre><code>$  htag p Some text
+&gt;  &lt;p&gt;Some text&lt;/p&gt;
 
-$ htag p Some text
-&lt;p&gt;Some text&lt;/p&gt;
+$  htag p &quot;Some text&quot;
+&gt;  &lt;p&gt;Some text&lt;/p&gt;
 
-$ htag p &quot;Some text&quot;
-&lt;p&gt;Some text&lt;/p&gt;
-
-$ echo &quot;Some text&quot; | htag p
-&lt;p&gt;Some text&lt;/p&gt;
-
-$ htag a &quot;An anchor tag&quot; --href &quot;https://foobar.baz&quot;
-&lt;a href=&quot;https://foobar.baz&quot;&gt;An anchor tag&lt;/a&gt;
-
-$ for FILE in $(ls)
-&gt; do htag li &quot;$FILE&quot;
-&gt; done | htag ul
-&lt;ul&gt;&lt;li&gt;file1.txt&lt;/li&gt;&lt;li&gt;file2.txt&lt;/li&gt;&lt;li&gt;file3.txt&lt;/li&gt;&lt;/ul&gt;</code></pre>
+$  echo &quot;Some text&quot; | htag p
+&gt;  &lt;p&gt;Some text&lt;/p&gt;</code></pre>
+<p>Adding attributes:</p>
+<pre><code>$  htag a &quot;An anchor tag&quot; --href &quot;https://foobar.baz&quot;
+&gt;  &lt;a href=&quot;https://foobar.baz&quot;&gt;An anchor tag&lt;/a&gt;</code></pre>
+<p>A more complicated example:</p>
+<pre><code>$  for FILE in $(ls)
+   do htag li &quot;$FILE&quot;
+   done | htag ul
+&gt;  &lt;ul&gt;&lt;li&gt;bin&lt;/li&gt;
+&lt;li&gt;doc&lt;/li&gt;
+&lt;li&gt;justfile&lt;/li&gt;
+&lt;li&gt;LICENSE&lt;/li&gt;
+&lt;li&gt;pandoc.yml&lt;/li&gt;
+&lt;li&gt;README.md&lt;/li&gt;
+&lt;li&gt;src&lt;/li&gt;&lt;/ul&gt;</code></pre>
 <h1 id="see-also">SEE ALSO</h1>
 <p>Source code can be found at <a href="https://github.com/ctwiebe23/htag" class="uri">https://github.com/ctwiebe23/htag</a>.</p>
 </body>
