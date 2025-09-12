@@ -125,6 +125,7 @@ char* readBodyArgsAndPrintAttributes(char** bodyArgs, int n)
         // is CLA long flag?
         if (canReadAttrs && bodyArgs[i][0] == '-' && bodyArgs[i][1] == '-') {
             if (bodyArgs[i][2] == 0) {
+                // the flag is "--"
                 canReadAttrs = FALSE;
             } else {
                 if (i == n - 1) {
